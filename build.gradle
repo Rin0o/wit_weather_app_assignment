@@ -23,6 +23,16 @@ allprojects {
     }
 }
 
+ext {
+    latestFastAdapterRelease = '4.1.2'
+    androidX = '1.1.0'
+    retrofit = '2.7.0'
+    gson = '2.8.6'
+    fastscroll = '2.0.0'
+    googlelocation = '17.0.0'
+    permissions = '3.8'
+}
+
 task clean(type: Delete) {
     delete rootProject.buildDir
 }

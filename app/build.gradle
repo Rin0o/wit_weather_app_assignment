@@ -31,4 +31,29 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
+
+/*FastAdapter*/
+    implementation("com.mikepenz:fastadapter:$latestFastAdapterRelease@aar") {
+        transitive = true
+    }
+
+    implementation "com.mikepenz:fastadapter-extensions-expandable:$latestFastAdapterRelease"
+    //expandables
+    implementation "com.mikepenz:fastadapter-extensions-diff:$latestFastAdapterRelease"
+    // diff util helpers
+    implementation "com.mikepenz:fastadapter-extensions-swipe:$latestFastAdapterRelease"
+    // swipe support
+    implementation "com.mikepenz:fastadapter-extensions-ui:$latestFastAdapterRelease"
+    // pre-defined ui components
+    implementation "com.google.android.material:material:$androidX"
+    /*Retrofit*/
+    implementation "com.squareup.retrofit2:retrofit:$retrofit"
+    /*GSON*/
+    implementation "com.google.code.gson:gson:$gson"
+    /*FastScroll*/
+    implementation "com.simplecityapps:recyclerview-fastscroll:$fastscroll"
+    /*Google Location*/
+    implementation "com.google.android.gms:play-services-location:$googlelocation"
+    /*Permissions*/
+    implementation "com.nabinbhandari.android:permissions:$permissions"
 }
