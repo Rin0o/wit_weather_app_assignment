@@ -4,6 +4,7 @@ import sr_rino.witweatherapp.data.remote.WeatherRemoteDataSource
 
 class WeatherRepository (private val weatherRDSData: WeatherDataSource) : WeatherDataSource{
 
+
     companion object {
         private var INSTANCE: WeatherRepository? = null
 
@@ -15,8 +16,19 @@ class WeatherRepository (private val weatherRDSData: WeatherDataSource) : Weathe
         }
     }
 
-    override fun getWeatherLocations(callback: WeatherDataSource.GetWeatherLocationsCallback) {
-        weatherRDSData.getWeatherLocations(callback)
+    override fun getWeatherLocationByCoordinates(
+        lat: String,
+        long: String,
+        callback: WeatherDataSource.GetWeatherLocationByCoordinatesCallback
+    ) {
+        weatherRDSData.getWeatherLocationByCoordinates(lat, long, callback)
+    }
+
+    override fun getWeatherLocationsByGroup(
+        ids: String,
+        callback: WeatherDataSource.GetWeatherLocationsByGroupCallback
+    ) {
+        weatherRDSData.getWeatherLocationsByGroup(ids, callback)
     }
 
 }

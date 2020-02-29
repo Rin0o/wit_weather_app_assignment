@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Wit Weather App</string>
+    <string name="string_na">N/A</string>
+    <string name="aa">N/A</string>
 </resources>

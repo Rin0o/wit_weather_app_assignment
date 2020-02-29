@@ -20,6 +20,11 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
 }
 
 dependencies {
@@ -48,6 +53,8 @@ dependencies {
     implementation "com.google.android.material:material:$androidX"
     /*Retrofit*/
     implementation "com.squareup.retrofit2:retrofit:$retrofit"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofit"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofit"
     /*GSON*/
     implementation "com.google.code.gson:gson:$gson"
     /*FastScroll*/
@@ -56,4 +63,10 @@ dependencies {
     implementation "com.google.android.gms:play-services-location:$googlelocation"
     /*Permissions*/
     implementation "com.nabinbhandari.android:permissions:$permissions"
+    // https://github.com/ReactiveX/RxAndroid
+    implementation "io.reactivex.rxjava2:rxandroid:$rxandroid"
+    implementation "io.reactivex.rxjava2:rxjava:$rxjava"
+    /*KotlinX Courotines */
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines"
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.0.0'
 }
