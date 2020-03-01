@@ -4,7 +4,7 @@ This app is my answer to Wit recruitment challenge.
 The app uses the http://openweathermap.org/api weather API to get its data.  
 The icons used belong to Freepik from FlatIcon.  
 
-Notes:
+Notes:  
 -I opted by using a more minimalistic aspect with only one screen to show the data.  
 -The app used 2 endpoints to get the data, the first to get the current location weather details 
 and a second one to get the cities details as per requested in the challenge.  
