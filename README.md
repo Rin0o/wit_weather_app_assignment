@@ -1,6 +1,6 @@
 # wit_weather_app_assignment
 
-This app is my answear to Wit recruitment challange \n
+This app is my answear to Wit recruitment challange /n
 The app uses the http://openweathermap.org/api weather API to get its data
 The icons used belong to Freepik from FlatIcon.
 
