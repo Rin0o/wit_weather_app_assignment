@@ -7,19 +7,14 @@ interface WeatherContract {
 
     interface View {
 
-        fun onGetWeatherLocationsByGroupSuccessful(list: List<WeatherLocation>)
-        fun onGetWeatherLocationsByGroupFailure(readon: String)
-
-        fun onGetWeatherLocationByCoordinatesSuccessful(x: WeatherLocation)
-        fun onGetWeatherLocationByCoordinatesFailure(readon: String)
-
-        fun onGetCurrentLocationSuccessful(location: Location)
+        fun onGetWeatherSuccessful(list: List<WeatherLocation>)
+        fun onGetWeatherFailure(readon: String)
 
     }
 
     interface Controller {
 
-        fun getCurrentLocation()
+        fun getWeather()
         fun getWeatherLocationsByGroup(ids: String)
         fun getWeatherByCoordinates(lat: String, long: String)
     }

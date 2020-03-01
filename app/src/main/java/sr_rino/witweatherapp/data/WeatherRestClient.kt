@@ -16,7 +16,6 @@ class WeatherRestClient {
     val BASE_URL = "https://api.openweathermap.org/data/2.5/"
     val API_KEY = "a8afe571bd36335e47df69deaef32a66"
 
-
     /**
      * Generic method to create rest requests
      */

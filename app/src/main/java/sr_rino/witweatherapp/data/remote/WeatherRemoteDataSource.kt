@@ -11,7 +11,6 @@ import sr_rino.witweatherapp.data.objects.WeatherLocation
 
 class WeatherRemoteDataSource : WeatherDataSource{
 
-
     companion object {
         private var INSTANCE: WeatherRemoteDataSource? = null
 

@@ -17,7 +17,6 @@ import com.mikepenz.fastadapter.select.getSelectExtension
 import kotlinx.android.synthetic.main.fragment_weather.view.*
 import sr_rino.witweatherapp.R
 import sr_rino.witweatherapp.data.WeatherRepository
-import sr_rino.witweatherapp.data.objects.Locations
 import sr_rino.witweatherapp.data.objects.WeatherLocation
 import sr_rino.witweatherapp.data.remote.WeatherRemoteDataSource
 
@@ -35,7 +34,6 @@ class WeatherFragment : Fragment(), WeatherContract.View {
     private lateinit var mFastAdapter: FastAdapter<FastAdapterWeather>
     private lateinit var mController: WeatherController
     private lateinit var mRootLayout: View
-    //private lateinit var mActionModeHelper: ActionModeHelper<FastAdapterPallets>
 
     private lateinit var mCurrentLocation: Location
     private var mWeatherList = mutableListOf<WeatherLocation>()
@@ -60,22 +58,21 @@ class WeatherFragment : Fragment(), WeatherContract.View {
         setHasOptionsMenu(true)
 
         if (isAdded){
-            //mFusedLocationClient = LocationServices.getFusedLocationProviderClient(activity!!)
+
             initializeFastAdapter()
-            mSwipeRefresh = mRootLayout.fragment_injection_recicler_swipe
-            mSwipeRefresh.isEnabled = true
-            mSwipeRefresh.setOnRefreshListener {
-                fetchData()
-            }
+            initializeSwipeRefresh()
 
             fetchData()
         }
 
     }
 
+    /**
+     * Call to get WeatherLocations Data
+     */
     private fun fetchData() {
         drawLoadingView()
-        mController.getCurrentLocation()
+        mController.getWeather()
     }
 
     /**
@@ -108,15 +105,35 @@ class WeatherFragment : Fragment(), WeatherContract.View {
 
     }
 
-    private fun populateRecyclerView() {
-        if (mWeatherList.isNotEmpty()){
-            mWeatherList.forEach { weather ->
-                mItemAdapter.add(FastAdapterWeather(requireContext(), weather))
-            }
-
+    /**
+     * Initialize the Swipe to Load View component
+     */
+    private fun initializeSwipeRefresh() {
+        mSwipeRefresh = mRootLayout.fragment_injection_recicler_swipe
+        mSwipeRefresh.isEnabled = true
+        mSwipeRefresh.setOnRefreshListener {
+            fetchData()
         }
     }
 
+    /**
+     * Insert new list in View
+     */
+    private fun populateRecyclerView(list: List<WeatherLocation>) {
+        if (list.isNotEmpty()){
+            mItemAdapter.clear()
+            mFastAdapter.notifyAdapterDataSetChanged()
+            var adapterList = mutableListOf<FastAdapterWeather>()
+            list.forEach { weather ->
+                adapterList.add(FastAdapterWeather(requireContext(), weather))
+            }
+            mItemAdapter.setNewList(adapterList)
+        }
+    }
+
+    /**
+     * Set View components to LoadOk State
+     */
     private fun drawLoadingView() {
         mItemAdapter.clear()
         mRootLayout.apply {
@@ -126,6 +143,9 @@ class WeatherFragment : Fragment(), WeatherContract.View {
         }
     }
 
+    /**
+     * Set View components to Loading state
+     */
     private fun drawLoadedView() {
         mRootLayout.apply {
             this.fragment_generic_progress_bar_view.visibility = View.GONE
@@ -137,6 +157,9 @@ class WeatherFragment : Fragment(), WeatherContract.View {
         }
     }
 
+    /**
+     * Set View components to Failure State
+     */
     private fun drawLoadFailView() {
         mRootLayout.apply {
             this.fragment_generic_progress_bar_view.visibility = View.GONE
@@ -148,31 +171,18 @@ class WeatherFragment : Fragment(), WeatherContract.View {
         }
     }
 
-    override fun onGetCurrentLocationSuccessful(location: Location) {
-        mCurrentLocation = location
-        mController.getWeatherByCoordinates(location.latitude.toString(), location.longitude.toString())
-    }
-
-    override fun onGetWeatherLocationByCoordinatesSuccessful(weather: WeatherLocation) {
-        mWeatherList.add(weather)
-        val ids = Locations.values().joinToString (separator = ",") { it.cityId.toString() }
-        mController.getWeatherLocationsByGroup(ids)
-    }
-
-    override fun onGetWeatherLocationByCoordinatesFailure(reason: String) {
-        Toast.makeText(requireContext(), reason, Toast.LENGTH_LONG).show()
-        drawLoadFailView()
-    }
-
-
-    override fun onGetWeatherLocationsByGroupSuccessful(list: List<WeatherLocation>) {
-        mWeatherList.addAll(list)
-
-        populateRecyclerView()
+    /**
+     * Get Weather Locations list from DataSource
+     */
+    override fun onGetWeatherSuccessful(list: List<WeatherLocation>) {
+        populateRecyclerView(list)
         drawLoadedView()
     }
 
-    override fun onGetWeatherLocationsByGroupFailure(reason: String) {
+    /**
+     * Show Toast in Case of error or failure
+     */
+    override fun onGetWeatherFailure(reason: String) {
         Toast.makeText(requireContext(), reason, Toast.LENGTH_LONG).show()
         drawLoadFailView()
     }

@@ -4,6 +4,10 @@ import sr_rino.witweatherapp.data.remote.WeatherRemoteDataSource
 
 class WeatherRepository (private val weatherRDSData: WeatherDataSource) : WeatherDataSource{
 
+    /**
+     * The class would be were i would put the data persistence using some kind of item box/SQL lite DB
+     * Would only get Data from API if persisted data was empty or outdated by some time margin
+     */
 
     companion object {
         private var INSTANCE: WeatherRepository? = null
@@ -16,6 +20,9 @@ class WeatherRepository (private val weatherRDSData: WeatherDataSource) : Weathe
         }
     }
 
+    /**
+     * Call to API to get Current location Weather Details
+     */
     override fun getWeatherLocationByCoordinates(
         lat: String,
         long: String,
@@ -24,6 +31,9 @@ class WeatherRepository (private val weatherRDSData: WeatherDataSource) : Weathe
         weatherRDSData.getWeatherLocationByCoordinates(lat, long, callback)
     }
 
+    /**
+     * Call to API to get Capitals locations Weather Details
+     */
     override fun getWeatherLocationsByGroup(
         ids: String,
         callback: WeatherDataSource.GetWeatherLocationsByGroupCallback

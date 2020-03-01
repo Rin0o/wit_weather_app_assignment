@@ -7,6 +7,7 @@ import android.os.Looper
 import com.google.android.gms.location.*
 import sr_rino.witweatherapp.data.WeatherDataSource
 import sr_rino.witweatherapp.data.WeatherRepository
+import sr_rino.witweatherapp.data.objects.Locations
 import sr_rino.witweatherapp.data.objects.WeatherLocation
 
 class WeatherController (private val activity: Activity,
@@ -15,43 +16,64 @@ class WeatherController (private val activity: Activity,
 
     var mFusedLocationClient: FusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(activity!!)
 
+    //Weather Locations List to be returned to the view
+    private var mWeatherList = mutableListOf<WeatherLocation>()
+
+    /**
+     * Call to dataSource to get capitals weather by their API id
+     */
     override fun getWeatherLocationsByGroup(ids: String) {
         mWeatherRepository.getWeatherLocationsByGroup(ids, object : WeatherDataSource.GetWeatherLocationsByGroupCallback{
             override fun onGetWeatherLocationSuccessful(list: List<WeatherLocation>) {
-                mWeatherView.onGetWeatherLocationsByGroupSuccessful(list)
+                mWeatherList.addAll(list)
+                mWeatherView.onGetWeatherSuccessful(mWeatherList)
             }
 
             override fun onGetWeatherFailure(reason: String) {
-                mWeatherView.onGetWeatherLocationsByGroupFailure(reason)
-            }
-
-        })
-    }
-
-    override fun getWeatherByCoordinates(lat: String, long: String) {
-        mWeatherRepository.getWeatherLocationByCoordinates(lat, long, object : WeatherDataSource.GetWeatherLocationByCoordinatesCallback{
-            override fun onGetWeatherLocationSuccessful(x: WeatherLocation) {
-                mWeatherView.onGetWeatherLocationByCoordinatesSuccessful(x)
-            }
-
-            override fun onGetWeatherFailure(reason: String) {
-                mWeatherView.onGetWeatherLocationByCoordinatesFailure(reason)
+                mWeatherView.onGetWeatherFailure(reason)
             }
 
         })
     }
 
     /**
-     * https://www.androdocs.com/kotlin/getting-current-location-latitude-longitude-in-android-using-kotlin.html
+     * Call to dataSource to get location by geo coordinates
+     * Used to get current location Weather
      */
-    override fun getCurrentLocation() {
+    override fun getWeatherByCoordinates(lat: String, long: String) {
+        mWeatherRepository.getWeatherLocationByCoordinates(lat, long, object : WeatherDataSource.GetWeatherLocationByCoordinatesCallback{
+            override fun onGetWeatherLocationSuccessful(weather: WeatherLocation) {
+                mWeatherList.add(weather)
+                val ids = Locations.values().joinToString (separator = ",") { it.cityId.toString() }
+                getWeatherLocationsByGroup(ids)
+            }
 
+            override fun onGetWeatherFailure(reason: String) {
+                mWeatherView.onGetWeatherFailure(reason)
+            }
+
+        })
+    }
+
+    /**
+     * Call to get Weather list
+     */
+    override fun getWeather() {
+        mWeatherList.clear()
+        getCurrentLocation()
+    }
+
+    /**
+     * https://www.androdocs.com/kotlin/getting-current-location-latitude-longitude-in-android-using-kotlin.html
+     * Get current GPS geo coordinates
+     */
+    private fun getCurrentLocation(){
         mFusedLocationClient.lastLocation.addOnCompleteListener(activity!!) { task ->
             var location: Location? = task.result
             if (location == null) {
                 requestNewLocationData()
             } else {
-                mWeatherView.onGetCurrentLocationSuccessful(location)
+                getWeatherByCoordinates(location.latitude.toString(), location.longitude.toString())
             }
         }
     }
@@ -72,8 +94,8 @@ class WeatherController (private val activity: Activity,
 
     private val mLocationCallback = object : LocationCallback() {
         override fun onLocationResult(locationResult: LocationResult) {
-            mWeatherView.onGetCurrentLocationSuccessful(locationResult.lastLocation)
-
+            var location = locationResult.lastLocation
+            getWeatherByCoordinates(location.latitude.toString(), location.longitude.toString())
         }
     }
 }
